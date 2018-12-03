@@ -8,3 +8,6 @@ This project adheres to [Semantic Versioning](http://semver.org/) and [Keep a ch
 
 ### Fixed
 - *[#24](https://github.com/pryorda/vmware_exporter/issues/24) UTF8 Error* @jnogol
+
+
+# TESTING CHANGE LOG
