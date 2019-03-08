@@ -168,51 +168,172 @@ You can use the following parameters in the Prometheus configuration file. The `
 
 ## Current Status
 
-- vCenter and vSphere 6.0/6.5 have been tested.
+- vCenter and vSphere 5.5/6.0/6.5/6.7 have been tested.
 - VM information, Snapshot, Host and Datastore basic information is exported, i.e:
 ```
-# HELP vmware_snapshots VMware current number of existing snapshots
-# TYPE vmware_snapshot_count gauge
-vmware_snapshot_timestamp_seconds{vm_name="My Super Virtual Machine"} 2.0
-# HELP vmware_snapshot_timestamp_seconds VMware Snapshot creation time in seconds
-# TYPE vmware_snapshot_timestamp_seconds gauge
-vmware_snapshot_age{vm_name="My Super Virtual Machine",vm_snapshot_name="Very old snaphot"} 1478146956.96092
-vmware_snapshot_age{vm_name="My Super Virtual Machine",vm_snapshot_name="Old snapshot"} 1478470046.975632
+# HELP vmware_vm_power_state VMWare VM Power state (On / Off)
+# TYPE vmware_vm_power_state gauge
+vmware_vm_power_state{cluster_name="cluster1",dc_name="dc1",host_name="esx1.company.com",vm_name="My Super Virtual Machine"} 1.0
+
+# HELP vmware_vm_boot_timestamp_seconds VMWare VM boot time in seconds
+# TYPE vmware_vm_boot_timestamp_seconds gauge
+vmware_vm_boot_timestamp_seconds{cluster_name="cluster1",dc_name="dc1",host_name="esx1.company.com",vm_name="My Super Virtual Machine"} 1234567890.123456
+
+# HELP vmware_vm_num_cpu VMWare Number of processors in the virtual machine
+# TYPE vmware_vm_num_cpu gauge
+vmware_vm_num_cpu{cluster_name="cluster1",dc_name="dc1",host_name="esx1.company.com",vm_name="My Super Virtual Machine"} 1.0
+
+# HELP vmware_vm_memory_max VMWare VM Memory Max availability in Mbytes
+# TYPE vmware_vm_memory_max gauge
+vmware_vm_memory_max{cluster_name="cluster1",dc_name="dc1",host_name="esx1.company.com",vm_name="My Super Virtual Machine"} 1024.0
+
+# HELP vmware_vm_guest_disk_free Disk metric per partition
+# TYPE vmware_vm_guest_disk_free gauge
+vmware_vm_guest_disk_free{cluster_name="cluster1",dc_name="dc1",host_name="esx1.company.com",partition="/",vm_name="My Super Virtual Machine"} 123456789.0
+
+# HELP vmware_vm_guest_disk_capacity Disk capacity metric per partition
+# TYPE vmware_vm_guest_disk_capacity gauge
+vmware_vm_guest_disk_capacity{cluster_name="cluster1",dc_name="dc1",host_name="esx1.company.com",partition="/",vm_name="My Super Virtual Machine"} 1234567890.0
+
+# HELP vmware_vm_guest_tools_running_status VM tools running status
+# TYPE vmware_vm_guest_tools_running_status gauge
+vmware_vm_guest_tools_running_status{cluster_name="cluster1",dc_name="dc1",host_name="esx1.company.com",tools_status="toolsOk",vm_name="My Super Virtual Machine"} 1.0
+
+# HELP vmware_vm_guest_tools_version VM tools version
+# TYPE vmware_vm_guest_tools_version gauge
+vmware_vm_guest_tools_version{cluster_name="cluster1",dc_name="dc1",host_name="esx1.company.com",tools_version="123456789",vm_name="My Super Virtual Machine"} 1.0
+
+# HELP vmware_vm_guest_tools_version_status VM tools version status
+# TYPE vmware_vm_guest_tools_version_status gauge
+vmware_vm_guest_tools_version_status{cluster_name="cluster1",dc_name="dc1",host_name="esx1.company.com",tools_version_status="guestToolsCurrent",vm_name="My Super Virtual Machine"} 1.0
+
+
+
 
 # HELP vmware_datastore_capacity_size VMware Datastore capacity in bytes
 # TYPE vmware_datastore_capacity_size gauge
-vmware_datastore_capacity_size{ds_name="ESX1-LOCAL"} 67377299456.0
+vmware_datastore_capacity_size{dc_name="dc1",ds_cluster="ds1",ds_name="ESX1-LOCAL"} 67377299456.0
+
 # HELP vmware_datastore_freespace_size VMware Datastore freespace in bytes
 # TYPE vmware_datastore_freespace_size gauge
-vmware_datastore_freespace_size{ds_name="ESX1-LOCAL"} 66349694976.0
+vmware_datastore_freespace_size{dc_name="dc1",ds_cluster="ds1",ds_name="ESX1-LOCAL"} 66349694976.0
+
 # HELP vmware_datastore_uncommited_size VMware Datastore uncommitted in bytes
 # TYPE vmware_datastore_uncommited_size gauge
-vmware_datastore_uncommited_size{ds_name="ESX1-LOCAL"} 0.0
+vmware_datastore_uncommited_size{dc_name="dc1",ds_cluster="ds1",ds_name="ESX1-LOCAL"} 0.0
+
 # HELP vmware_datastore_provisoned_size VMware Datastore provisoned in bytes
 # TYPE vmware_datastore_provisoned_size gauge
-vmware_datastore_provisoned_size{ds_name="ESX1-LOCAL"} 1027604480.0
+vmware_datastore_provisoned_size{dc_name="dc1",ds_cluster="ds1",ds_name="ESX1-LOCAL"} 1027604480.0
+
 # HELP vmware_datastore_hosts VMware Hosts number using this datastore
 # TYPE vmware_datastore_hosts gauge
-vmware_datastore_hosts{ds_name="ESX1-LOCAL"} 1.0
+vmware_datastore_hosts{dc_name="dc1",ds_cluster="ds1",ds_name="ESX1-LOCAL"} 1.0
+
 # HELP vmware_datastore_vms VMware Virtual Machines number using this datastore
 # TYPE vmware_datastore_vms gauge
-vmware_datastore_vms{ds_name="ESX1-LOCAL"} 0.0
+vmware_datastore_vms{dc_name="dc1",ds_cluster="ds1",ds_name="ESX1-LOCAL"} 0.0
+
+# HELP vmware_datastore_maintenance_mode VMWare datastore maintenance mode (normal / inMaintenance / enteringMaintenance)
+# TYPE vmware_datastore_maintenance_mode gauge
+vmware_datastore_maintenance_mode{dc_name="dc1",ds_cluster="ds1",ds_name="ESX1-LOCAL",mode="normal"} 1.0
+
+# HELP vmware_datastore_type VMWare datastore type (VMFS, NetworkFileSystem, NetworkFileSystem41, CIFS, VFAT, VSAN, VFFS)
+# TYPE vmware_datastore_type gauge
+vmware_datastore_type{dc_name="dc1",ds_cluster="ds1",ds_name="ESX1-LOCAL",ds_type="VMFS"} 1.0
+
+# HELP vmware_datastore_accessible VMWare datastore accessible (true / false)
+# TYPE vmware_datastore_accessible gauge
+vmware_datastore_accessible{dc_name="dc1",ds_cluster="ds1",ds_name="ESX1-LOCAL"} 1.0
+
+
+
 
 # HELP vmware_host_power_state VMware Host Power state (On / Off)
 # TYPE vmware_host_power_state gauge
-vmware_host_power_state{host_name="esx1.company.com"} 1.0
-# HELP vmware_host_cpu_usage VMware Host CPU usage in MHz
+vmware_host_power_state{cluster_name="cluster1",dc_name="dc1",host_name="esx1.company.com"} 1.0
+
+# HELP vmware_host_connection_state VMWare Host connection state (connected / disconnected / notResponding)
+# TYPE vmware_host_connection_state gauge
+vmware_host_connection_state{cluster_name="cluster1",dc_name="dc1",host_name="esx1.company.com",state="connected"} 1.0
+
+# HELP vmware_host_maintenance_mode VMWare Host maintenance mode (true / false)
+# TYPE vmware_host_maintenance_mode gauge
+vmware_host_maintenance_mode{cluster_name="cluster1",dc_name="dc1",host_name="esx1.company.com"} 0.0
+
+# HELP vmware_host_boot_timestamp_seconds VMWare Host boot time in seconds
+# TYPE vmware_host_boot_timestamp_seconds gauge
+vmware_host_boot_timestamp_seconds{cluster_name="cluster1",dc_name="dc1",host_name="esx1.company.com"} 123456789.0
+
+# HELP vmware_host_cpu_usage VMWare Host CPU usage in Mhz
 # TYPE vmware_host_cpu_usage gauge
-vmware_host_cpu_usage{host_name="esx1.company.com"} 2959.0
-# HELP vmware_host_cpu_max VMware Host CPU max availability in MHz
+vmware_host_cpu_usage{cluster_name="cluster1",dc_name="dc1",host_name="esx1.company.com"} 12345.0
+
+# HELP vmware_host_cpu_max VMWare Host CPU max availability in Mhz
 # TYPE vmware_host_cpu_max gauge
-vmware_host_cpu_max{host_name="esx1.company.com"} 28728.0
-# HELP vmware_host_memory_usage VMware Host Memory usage in Mbytes
+vmware_host_cpu_max{cluster_name="cluster1",dc_name="dc1",host_name="esx1.company.com"} 12345.0
+
+# HELP vmware_host_num_cpu VMWare Number of processors in the Host
+# TYPE vmware_host_num_cpu gauge
+vmware_host_num_cpu{cluster_name="cluster1",dc_name="dc1",host_name="esx1.company.com"} 12.0
+
+# HELP vmware_host_memory_usage VMWare Host Memory usage in Mbytes
 # TYPE vmware_host_memory_usage gauge
-vmware_host_memory_usage{host_name="esx1.company.com"} 107164.0
-# HELP vmware_host_memory_max VMware Host Memory Max availability in Mbytes
+vmware_host_memory_usage{cluster_name="cluster1",dc_name="dc1",host_name="esx1.company.com"} 12345.0
+
+# HELP vmware_host_memory_max VMWare Host Memory Max availability in Mbytes
 # TYPE vmware_host_memory_max gauge
-vmware_host_memory_max{host_name="esx1.company.com"} 131059.01953125
+vmware_host_memory_max{cluster_name="cluster1",dc_name="dc1",host_name="esx1.company.com"} 12345.0
+
+
+
+
+# HELP vmware_vm_snapshots VMWare current number of existing snapshots
+# TYPE vmware_vm_snapshots gauge
+vmware_vm_snapshots{cluster_name="cluster1",dc_name="dc1",host_name="esx1.company.com",vm_name="My Super Virtual Machine"} 1.0
+
+# HELP vmware_vm_snapshot_timestamp_seconds VMWare Snapshot creation time in seconds
+# TYPE vmware_vm_snapshot_timestamp_seconds gauge
+vmware_vm_snapshot_timestamp_seconds{cluster_name="cluster1",dc_name="dc1",host_name="esx1.company.com",vm_name="My Super Virtual Machine",vm_snapshot_name="12345"} 12345.0
+
+
+
+
+# HELP vmware_vm_cpu_ready_summation vmware_vm_cpu_ready_summation
+# TYPE vmware_vm_cpu_ready_summation gauge
+vmware_vm_cpu_ready_summation{cluster_name="cluster1",dc_name="dc1",host_name="esx1.company.com",vm_name="My Super Virtual Machine"} 12.0
+
+# HELP vmware_vm_cpu_usage_average vmware_vm_cpu_usage_average
+# TYPE vmware_vm_cpu_usage_average gauge
+vmware_vm_cpu_usage_average{cluster_name="cluster1",dc_name="dc1",host_name="esx1.company.com",vm_name="My Super Virtual Machine"} 12345.0
+
+# HELP vmware_vm_cpu_usagemhz_average vmware_vm_cpu_usagemhz_average
+# TYPE vmware_vm_cpu_usagemhz_average gauge
+vmware_vm_cpu_usagemhz_average{cluster_name="cluster1",dc_name="dc1",host_name="esx1.company.com",vm_name="My Super Virtual Machine"} 12345.0
+
+# HELP vmware_vm_disk_usage_average vmware_vm_disk_usage_average
+# TYPE vmware_vm_disk_usage_average gauge
+vmware_vm_disk_usage_average{cluster_name="cluster1",dc_name="dc1",host_name="esx1.company.com",vm_name="My Super Virtual Machine"} 12.0
+
+# HELP vmware_vm_disk_read_average vmware_vm_disk_read_average
+# TYPE vmware_vm_disk_read_average gauge
+vmware_vm_disk_read_average{cluster_name="cluster1",dc_name="dc1",host_name="esx1.company.com",vm_name="My Super Virtual Machine"} 0.0
+
+# HELP vmware_vm_disk_write_average vmware_vm_disk_write_average
+# TYPE vmware_vm_disk_write_average gauge
+vmware_vm_disk_write_average{cluster_name="cluster1",dc_name="dc1",host_name="esx1.company.com",vm_name="My Super Virtual Machine"} 12.0
+
+# HELP vmware_vm_mem_usage_average vmware_vm_mem_usage_average
+# TYPE vmware_vm_mem_usage_average gauge
+vmware_vm_mem_usage_average{cluster_name="cluster1",dc_name="dc1",host_name="esx1.company.com",vm_name="My Super Virtual Machine"} 12.0
+
+# HELP vmware_vm_net_received_average vmware_vm_net_received_average
+# TYPE vmware_vm_net_received_average gauge
+vmware_vm_net_received_average{cluster_name="cluster1",dc_name="dc1",host_name="esx1.company.com",vm_name="My Super Virtual Machine"} 12.0
+
+# HELP vmware_vm_net_transmitted_average vmware_vm_net_transmitted_average
+# TYPE vmware_vm_net_transmitted_average gauge
+vmware_vm_net_transmitted_average{cluster_name="cluster1",dc_name="dc1",host_name="esx1.company.com",vm_name="My Super Virtual Machine"} 12.0
 ```
 
 ## References
